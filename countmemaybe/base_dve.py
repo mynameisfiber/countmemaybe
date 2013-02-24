@@ -1,4 +1,10 @@
-#!/usr/bin/env/python2.7
+#!/usr/bin/env python2.7
+"""
+Base functions for all DVE's in the package
+
+micha gorelick, mynameisfiber@gmail.com
+http://micha.gd/
+"""
 
 import mmh3
 

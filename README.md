@@ -24,4 +24,4 @@ domain yields better results, although it requires more memory.  Furthermore,
 interesting dynamics are seen where HLL performs worse than KMV on some sets of
 data, and vise versa for others.  More investigation is necessary!
 
-![Benchmarks](https://raw.github.com/mynameisfiber/countmemaybe/master/test_dve.png "Benchmarks of hyper loglog vs kmin values")
+![Benchmarks](https://raw.github.com/mynameisfiber/countmemaybe/master/countmemaybe/test_dve.png "Benchmarks of hyper loglog vs kmin values")

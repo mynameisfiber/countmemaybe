@@ -5,7 +5,8 @@ value estimation using the alorithm descibed in [1].  Benchmarks on 1.8 GHz
 core i7 Macbook air yields 4.18 us per insertion and a relative error of
 ~1.53% for 160000 16bit integers using k=256 and 32bit murmur hash.
 
-micha gorelick, micha@bit.ly
+micha gorelick, mynameisfiber@gmail.com
+http://micha.gd/
 
 [1]: http://www.mpi-inf.mpg.de/~rgemulla/publications/beyer07distinct.pdf
 """

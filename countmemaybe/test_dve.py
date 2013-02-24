@@ -1,4 +1,10 @@
 #!/usr/bin/env python2.7
+"""
+Benchmark for the DVE's in this package
+
+micha gorelick, mynameisfiber@gmail.com
+http://micha.gd/
+"""
 
 import numpy as np
 import pylab as py

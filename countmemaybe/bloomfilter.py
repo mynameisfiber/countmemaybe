@@ -2,7 +2,9 @@
 """
 Not really useful for DVE, but I felt like implementing a quick little bloom
 filter anyways
-micha gorelick, micha@bit.ly
+
+micha gorelick, mynameisfiber@gmail.com
+http://micha.gd/
 """
 
 import mmh3
