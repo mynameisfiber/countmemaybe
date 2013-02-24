@@ -1,9 +1,9 @@
 #!/usr/bin/env python2.7
-#
-# Not really useful for DVE, but I felt like implementing a quick little bloom
-# filter anyways
-# micha gorelick, micha@bit.ly
-#
+"""
+Not really useful for DVE, but I felt like implementing a quick little bloom
+filter anyways
+micha gorelick, micha@bit.ly
+"""
 
 import mmh3
 
