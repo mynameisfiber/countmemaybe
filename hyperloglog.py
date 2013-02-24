@@ -79,6 +79,12 @@ class HyperLogLog(BaseDVE):
         AuB = self.cardinality_union(other)
         return A + B - AuB
 
+    def jaccard(self, other):
+        A = self.cardinality()
+        B = self.cardinality()
+        AuB = self.cardinality_union(other)
+        return (A + B)/AuB - 1
+
     def _card_helper(self, M, m, alpha):
         E = alpha * m * m * self._indicator(M)
         if E <= 5.0 / 2.0 * m:
