@@ -19,9 +19,9 @@ average insertion time of 4us on a 1.8GHz i7 Macbook Air.
 
 Below are some benchmarks of error rates.  The set used for estimation are
 160000 random 16bit integers and the benchmark was generated using the
-`test_dve.py` script.  You can see that using a hash function with a larger
-domain yields better results, although it requires more memory.  Furthermore,
-interesting dynamics are seen where HLL performs worse than KMV on some sets of
-data, and vise versa for others.  More investigation is necessary!
+`test_dve.py` script.  For some as of yet unknown reason, KMV with a 64bit hash
+function performs _worse_ than a 32bit hash function.  This is counterintuitive
+and requires more investigation.  Furthermore, exact mean relative error rates
+vary from run to run by ~1%
 
 ![Benchmarks](https://raw.github.com/mynameisfiber/countmemaybe/master/countmemaybe/test_dve.png "Benchmarks of hyper loglog vs kmin values")
