@@ -32,7 +32,7 @@ if __name__ == "__main__":
         "actual"          : DVESet(),
         "32bit hll m=256" : hll.HyperLogLog(b=8),
         "32bit kmv k=256" : kmv.KMinValues(k=2**8),
-        "64bit kmv k=256" : kmv.KMinValues(k=2**8, hasher=murmur64, hasher_max=2**63-1),
+        "64bit kmv k=256" : kmv.KMinValues(k=2**8, hasher=murmur64, hasher_max=MAX_64BIT_INT),
     }
 
     results = {f:[] for f in methods}

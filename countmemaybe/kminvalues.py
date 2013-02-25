@@ -122,9 +122,8 @@ class KMinValues(BaseDVE):
         l = lambda D, k, e : (k - 1.0) / ((1.0 + e) * D)
         objective = lambda e, D, k, confidence : special.betainc(k, D-k+1, u(D, k, e)) - special.betainc(k, D-k+1, l(D, k, e)) - confidence
 
-        p = optimize.fsolve(objective, x0=0.05, args=(D, k, confidence))
-        return p[0]
-        #return 1.0 / (self.k)**0.5
+        p = optimize.newton(objective, x0=0.05, args=(D, k, confidence))
+        return p
 
 
 def test_constructor():
