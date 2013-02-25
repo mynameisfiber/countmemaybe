@@ -16,6 +16,7 @@ setup(
     author = 'Micha Gorelick',
     author_email = 'mynameisfiber@gmail.com',
     url = 'http://github.com/mynameisfiber/countmemaybe/',
+    download_url = 'https://github.com/mynameisfiber/countmemaybe/tarball/master',
     license = "GNU Lesser General Public License v3 or later (LGPLv3+)",
 
     classifiers = [
