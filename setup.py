@@ -10,7 +10,7 @@ from setuptools import setup
 
 setup(
     name = 'countmemaybe',
-    version = '0.1',
+    version = '0.3.1',
     description = 'A set of probabilstic distinct value estimators (ie: '\
                   'calculate the cardinality of big sets)',
     author = 'Micha Gorelick',
@@ -25,6 +25,8 @@ setup(
         "Topic :: Software Development :: Libraries",
         "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",
     ],
+
+    packages = ['countmemaybe',],
 
     install_requires = [
         "mmh3",
