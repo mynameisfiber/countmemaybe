@@ -122,7 +122,10 @@ class KMinValues(BaseDVE):
         l = lambda D, k, e : (k - 1.0) / ((1.0 + e) * D)
         objective = lambda e, D, k, confidence : special.betainc(k, D-k+1, u(D, k, e)) - special.betainc(k, D-k+1, l(D, k, e)) - confidence
 
-        p = optimize.newton(objective, x0=0.05, args=(D, k, confidence))
+        try:
+            p = optimize.newton(objective, x0=0.05, args=(D, k, confidence))
+        except RuntimeError:
+            p = 0
         return p
 
 
