@@ -15,6 +15,7 @@ from base_dve import BaseDVE
 
 import mmh3
 from blist import sortedlist
+import math
 
 from operator import attrgetter
 from itertools import (chain, ifilterfalse, imap)
@@ -110,22 +111,24 @@ class KMinValues(BaseDVE):
         return nt
 
     def relative_error(self, confidence=0.98, D=0):
-        try:
-            from scipy import (special, optimize)
-        except ImportError:
-            raise Exception("Scipy needed for relative error bounds")
+        p = 0
+        if D:
+            try:
+                from scipy import (special, optimize)
+            except ImportError:
+                raise Exception("Scipy needed for relative error bounds")
+            k = self.k
 
-        D = D or int(self.cardinality())
-        k = self.k
+            u = lambda D, k, e : (k - 1.0) / ((1.0 - e) * D)
+            l = lambda D, k, e : (k - 1.0) / ((1.0 + e) * D)
+            objective = lambda e, D, k, confidence : special.betainc(k, D-k+1, u(D, k, e)) - special.betainc(k, D-k+1, l(D, k, e)) - confidence
 
-        u = lambda D, k, e : (k - 1.0) / ((1.0 - e) * D)
-        l = lambda D, k, e : (k - 1.0) / ((1.0 + e) * D)
-        objective = lambda e, D, k, confidence : special.betainc(k, D-k+1, u(D, k, e)) - special.betainc(k, D-k+1, l(D, k, e)) - confidence
-
-        try:
-            p = optimize.newton(objective, x0=0.05, args=(D, k, confidence))
-        except RuntimeError:
-            p = 0
+            try:
+                p = optimize.newton(objective, x0=0.05, args=(D, k, confidence))
+            except RuntimeError:
+                pass
+        else:
+            p = math.sqrt(2.0 / (math.pi * (self.k - 2)))
         return p
 
 

@@ -39,6 +39,7 @@ if __name__ == "__main__":
 
     x = np.arange(1, max_val, chunk_size)
 
+    np.random.seed()
     widgets = ["Processing", Bar(), ETA()]
     p = ProgressBar(maxval=len(x), widgets=widgets).start()
     for i in p(x):
