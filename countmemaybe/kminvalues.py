@@ -14,7 +14,7 @@ http://micha.gd/
 from base_dve import BaseDVE
 
 import mmh3
-from blist import sortedlist
+from blist import sortedlist, sortedset
 import math
 
 from operator import attrgetter
@@ -68,7 +68,8 @@ class KMinValues(BaseDVE):
 
     def _direct_sum(self, *others):
         n = 0
-        X = set(chain(self.kmin, *imap(attrgetter("kmin"), others)))
+        k = self._smallest_k(*others)
+        X = sortedset(chain(self.kmin, *imap(attrgetter("kmin"), others)))[:k]
         for item in self.kmin:
             if item in X and all(item in L.kmin for L in others):
                 n += 1
@@ -79,15 +80,13 @@ class KMinValues(BaseDVE):
         self.kmin = sortedlist(unique_everseen(chain(self.kmin, *imap(attrgetter("kmin"), others))))[:newk]
 
     def jaccard(self, other, k=0):
-        k = min(self.k, other.k)
-        n, _ = self._direct_sum(other)
-        return n / (1.0 * k)
+        n, X = self._direct_sum(other)
+        return n / (1.0 * len(X))
 
     def cardinality_intersection(self, *others):
-        k = self._smallest_k(*others)
         n, X = self._direct_sum(*others)
         cardX = self._cardhelp(max(X), len(X))
-        return n / (1.0 * k) * cardX
+        return n / (1.0 * len(k)) * cardX
 
     def cardinality_union(self, *others):
         _, X = self._direct_sum(*others)
@@ -106,7 +105,7 @@ class KMinValues(BaseDVE):
         assert other.k == self.k
         k = self._smallest_k(other)
         nt = KMinValues(k = k)
-        nt.kmin = k
+        nt.kmin = self.kmin
         nt.union(other)
         return nt
 
