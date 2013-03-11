@@ -24,4 +24,7 @@ function performs _worse_ than a 32bit hash function.  This is counterintuitive
 and requires more investigation.  Furthermore, exact mean relative error rates
 vary from run to run by ~1%
 
-![Benchmarks](https://raw.github.com/mynameisfiber/countmemaybe/master/countmemaybe/test_dve.png "Benchmarks of hyper loglog vs kmin values")
+![Benchmarks - Cardinality](https://raw.github.com/mynameisfiber/countmemaybe/dev/countmemaybe/test_dve-cardinality1.png "Benchmarks of hyper loglog vs kmin values")
+![Benchmarks - Union](https://raw.github.com/mynameisfiber/countmemaybe/dev/countmemaybe/test_dve-union.png "Benchmarks of hyper loglog vs kmin values")
+![Benchmarks - Intersection](https://raw.github.com/mynameisfiber/countmemaybe/dev/countmemaybe/test_dve-inter.png "Benchmarks of hyper loglog vs kmin values")
+![Benchmarks - Jaccard](https://raw.github.com/mynameisfiber/countmemaybe/dev/countmemaybe/test_dve-jaccard.png "Benchmarks of hyper loglog vs kmin values")
