@@ -86,7 +86,7 @@ class KMinValues(BaseDVE):
     def cardinality_intersection(self, *others):
         n, X = self._direct_sum(*others)
         cardX = self._cardhelp(max(X), len(X))
-        return n / (1.0 * len(k)) * cardX
+        return n / (1.0 * len(X)) * cardX
 
     def cardinality_union(self, *others):
         _, X = self._direct_sum(*others)
