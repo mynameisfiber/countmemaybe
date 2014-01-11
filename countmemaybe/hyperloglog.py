@@ -82,7 +82,7 @@ class HyperLogLog(BaseDVE):
 
     def jaccard(self, other):
         A = self.cardinality()
-        B = self.cardinality()
+        B = other.cardinality()
         AuB = self.cardinality_union(other)
         return (A + B)/AuB - 1
 
