@@ -7,7 +7,10 @@ http://micha.gd/
 """
 
 import numpy as np
-import pylab as py
+try:
+    import pylab as py
+except ImportError:
+    py = None
 
 import mmh3
 import hyperloglog as hll
@@ -51,28 +54,33 @@ if __name__ == "__main__":
     for r in results:
         results[r] = np.asarray(results[r])
 
-    py.subplot(211)
-    py.title("Comparison of distinct value estimators")
-    for name, result in results.iteritems():
-        py.plot(x, result, label=name)
-    py.legend(loc=2)
-    py.ylabel("Cardinality")
-    py.xlim(xmax=x[-1])
+    if py:
+        py.subplot(211)
+        py.title("Comparison of distinct value estimators")
+        for name, result in results.iteritems():
+            py.plot(x, result, label=name)
+        py.legend(loc=2)
+        py.ylabel("Cardinality")
+        py.xlim(xmax=x[-1])
 
-    py.subplot(212)
-    py.axhline(0)
+        py.subplot(212)
+        py.axhline(0)
     actual = results["actual"]
     for name, result in results.iteritems():
         if name == "actual":
             continue
         theoretical_eerror = methods[name].relative_error() * 100.0
         mean_eerror = (np.abs(actual - result) / actual).mean() * 100.0
-        py.plot(x, (actual-result)/actual * 100.0, label="%s (theory: %0.2f%%," \
-                " mean: %0.2f%%)" % (name, theoretical_eerror, mean_eerror))
-    py.ylim((-25., 25.))
-    py.legend(loc=8, ncol=2, fontsize="small")
-    py.ylabel("Relative error")
-    py.xlabel("non-unique set size")
-    py.xlim(xmax=x[-1])
+        label = "%s (theory: %0.2f%%," \
+                    " mean: %0.2f%%)" % (name, theoretical_eerror, mean_eerror)
+        print label
+        if py:
+            py.plot(x, (actual-result)/actual * 100.0, label=label)
+    if py:
+        py.ylim((-25., 25.))
+        py.legend(loc=8, ncol=2, fontsize="small")
+        py.ylabel("Relative error")
+        py.xlabel("non-unique set size")
+        py.xlim(xmax=x[-1])
 
-    py.savefig("test_dve.png")
+        py.savefig("test_dve.png")

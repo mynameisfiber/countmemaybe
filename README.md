@@ -1,5 +1,7 @@
 # Count me Maybe
 
+[![Build Status](https://travis-ci.org/mynameisfiber/countmemaybe.png)](https://travis-ci.org/mynameisfiber/countmemaybe)
+
 > Hey I just met you,
 > This is crazy,
 > But here's a number,

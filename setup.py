@@ -34,6 +34,6 @@ setup(
     ],
     extras_require = {
         "kminvalue_relative_error" : ["scipy", ],
-        "test_dve" : ["progressbar", ],
+        "test_dve" : ["progressbar", "matplotlib"],
     }
 )
