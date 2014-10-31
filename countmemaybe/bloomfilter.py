@@ -8,12 +8,14 @@ http://micha.gd/
 """
 
 import mmh3
+import numpy as np
 
 class BloomFilter:
-    def __init__(self, items=[], N=3, size=20):
-        self.bloom = [0,] * size
+    def __init__(self, items=[], N=3, size=20, dtype=np.uint8):
+        self.bloom = np.zeros(size, dtype=dtype)
         self.size = size
         self.N = N
+        self.dtype = dtype
         for i in items:
             self.add(i)
 
@@ -40,10 +42,21 @@ class BloomFilter:
     def __contains__(self, key):
         return self.contains(key)
 
+    def __add__(self, other):
+        if not isinstance(other, BloomFilter):
+            raise ValueError("Must be instance of BloomFilter")
+        if self.size != other.size or self.N != other.N or self.dtype != other.dtype:
+            raise ValueError("Both blooms must have the same properties")
+        newBloom = BloomFilter(N=self.N, size=self.size, dtype=self.dtype)
+        for i in xrange(self.size):
+            newBloom.bloom[i] = self.bloom[i] | other.bloom[i]
+        return newBloom
+
     def delete(self, key):
         if self.contains(key):
             for idx in self._idxiter(key):
                 self.bloom[idx] -= 1
+
 
 def test_bloom():
     items = ["a", "b", "c"]
@@ -55,25 +68,16 @@ def test_bloom():
     for i in items:
         assert i not in b
 
-def test_union(items1, items2):
-    import numpy as np
+def test_union():
+    items1 = "ab"
+    items2 = "bce"
     b1 = BloomFilter(items = items1, N=1, size=7)
     b2 = BloomFilter(items = items2, N=1, size=7)
 
-    f1 = np.asarray(b1.bloom)
-    f2 = np.asarray(b2.bloom)
+    assert all(i in b1 for i in items1)
+    assert all(i in b2 for i in items2)
 
-    print "f1: ", f1
-    print "f2: ", f2
+    b1pb2 = b1 + b2
 
-    f1pf2 = f1 + f2
-    f1mf2 = f1 - f2
+    assert all(i in b1pb2 for i in items1+items2)
 
-    print f1pf2, f1pf2.sum(), f1pf2.sum() / b1.N
-    print f1mf2, f1mf2.sum(), np.abs(f1mf2).sum() / b1.N / 2.0
-
-
-if __name__ == "__main__":
-    test_bloom()
-
-    test_union("ab", "bce")

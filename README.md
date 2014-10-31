@@ -14,6 +14,10 @@ cardinality of a set and also support unions.  The base set of operations are:
 * Cardinality of the Intersection
 * Jaccard Index
 
+We also implement a probabilistic quantile data-structure which creates a
+synopsis of the data in order to satisfy queries regarding the quantiles of the
+stream.
+
 Insertions are quite quick!  For both hyperloglog and kminvalues there is an
 average insertion time of 4us on a 1.8GHz i7 Macbook Air.
 
