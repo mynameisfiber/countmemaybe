@@ -10,7 +10,7 @@ from setuptools import setup
 
 setup(
     name = 'countmemaybe',
-    version = '0.3.4',
+    version = '0.4.1',
     description = 'A set of probabilstic distinct value estimators (ie: '\
                   'calculate the cardinality of big sets)',
     author = 'Micha Gorelick',
