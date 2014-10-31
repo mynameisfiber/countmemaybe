@@ -16,7 +16,10 @@ import mmh3
 import hyperloglog as hll
 import kminvalues as kmv
 
-from progressbar import ProgressBar, Bar, ETA
+try:
+    from progressbar import ProgressBar, Bar, ETA
+except ImportError:
+    ProgressBar = None
 
 class DVESet(set):
     def cardinality(self):
@@ -44,8 +47,11 @@ if __name__ == "__main__":
 
     np.random.seed()
     widgets = ["Processing", Bar(), ETA()]
-    p = ProgressBar(maxval=len(x), widgets=widgets).start()
-    for i in p(x):
+    _iter = iter(x)
+    if ProgressBar:
+        p = ProgressBar(maxval=len(x), widgets=widgets).start()
+        _iter = p(x)
+    for i in _iter:
         r = np.random.randint(MAX_16BIT_INT, size=chunk_size)
         for name, m in methods.items():
             m.update(r)
