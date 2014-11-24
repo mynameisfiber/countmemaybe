@@ -47,6 +47,29 @@ class Quantile(object):
         else:
             self.invariant = self.invariant_biased
 
+    def __getstate__(self):
+        self.flush()
+        return {
+            'quantiles' : self.quantiles,
+            'epsilon' : self.epsilon,
+            'samples' : self.samples,
+            'size' : self.size,
+            'n' : self.n,
+        }
+
+    def __setstate__(self, state):
+        self.quantiles = state['quantiles']
+        self.epsilon = state['epsilon']
+        self.samples = state['samples']
+        self.temporary = []
+        self._clean = True
+        self._sorted = True
+        self.size = state['size']
+        self.n = state['n']
+        if self.quantiles:
+            self.invariant = self.invariant_targeted
+        else:
+            self.invariant = self.invariant_biased
 
     def invariant_biased(self, r):
         return 2 * self.epsilon * r
