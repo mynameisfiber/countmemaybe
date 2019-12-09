@@ -27,8 +27,11 @@ class Sample:
         self.width = width
         self.delta = delta
 
-    def __cmp__(self, other):
-        return cmp(self.value, other.value)
+    def __lt__(self, other):
+        return self.value < other.value
+
+    def __eq__(self, other):
+        return self.value == other.value
 
 
 class Quantile(object):

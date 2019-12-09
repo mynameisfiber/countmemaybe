@@ -12,7 +12,7 @@ http://micha.gd/
 """
 
 import math
-from itertools import chain, ifilterfalse, imap
+from itertools import chain, filterfalse
 from operator import attrgetter
 
 import mmh3
