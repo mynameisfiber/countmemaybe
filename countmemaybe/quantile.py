@@ -14,15 +14,14 @@ class InvalidQuantile(Exception):
     def __init__(self, q, quantiles):
         self.q = q
         self.quantiles = quantiles
+
     def __str__(self):
-        return "Invalid Quantile. {} not in: {}".format(
-            self.q, 
-            self.quantiles
-        )
+        return "Invalid Quantile. {} not in: {}".format(self.q, self.quantiles)
 
 
 class Sample:
     __slots__ = ("value", "width", "delta")
+
     def __init__(self, value, width, delta):
         self.value = value
         self.width = width
@@ -33,7 +32,7 @@ class Sample:
 
 
 class Quantile(object):
-    def __init__(self, quantiles = None, epsilon = 0.001, buffer_size = 500):
+    def __init__(self, quantiles=None, epsilon=0.001, buffer_size=500):
         self.quantiles = quantiles
         self.epsilon = epsilon
         self.samples = []
@@ -50,22 +49,22 @@ class Quantile(object):
     def __getstate__(self):
         self.flush()
         return {
-            'quantiles' : self.quantiles,
-            'epsilon' : self.epsilon,
-            'samples' : self.samples,
-            'size' : self.size,
-            'n' : self.n,
+            "quantiles": self.quantiles,
+            "epsilon": self.epsilon,
+            "samples": self.samples,
+            "size": self.size,
+            "n": self.n,
         }
 
     def __setstate__(self, state):
-        self.quantiles = state['quantiles']
-        self.epsilon = state['epsilon']
-        self.samples = state['samples']
+        self.quantiles = state["quantiles"]
+        self.epsilon = state["epsilon"]
+        self.samples = state["samples"]
         self.temporary = []
         self._clean = True
         self._sorted = True
-        self.size = state['size']
-        self.n = state['n']
+        self.size = state["size"]
+        self.n = state["n"]
         if self.quantiles:
             self.invariant = self.invariant_targeted
         else:
@@ -74,7 +73,7 @@ class Quantile(object):
     def invariant_biased(self, r):
         return 2 * self.epsilon * r
 
-    def invariant_targeted(self, r, m=2**63-1):
+    def invariant_targeted(self, r, m=2 ** 63 - 1):
         f = 0
         for q in self.quantiles:
             if q * self.n <= r:
@@ -109,11 +108,7 @@ class Quantile(object):
             while i < len(self.samples):
                 c = self.samples[i]
                 if c.value > sample.value:
-                    s = Sample(
-                        sample.value, 
-                        sample.width, 
-                        int(self.invariant(r)) - 1
-                    )
+                    s = Sample(sample.value, sample.width, int(self.invariant(r)) - 1)
                     self.samples.insert(i, s)
                     break
                 r += c.width
@@ -127,7 +122,7 @@ class Quantile(object):
             return
         x = self.samples[-1]
         r = self.n - 1 - x.width
-        
+
         i = len(self.samples) - 1
         while i > 0:
             c = self.samples[i]

@@ -11,16 +11,17 @@ http://micha.gd/
 [1]: http://www.mpi-inf.mpg.de/~rgemulla/publications/beyer07distinct.pdf
 """
 
-from base_dve import BaseDVE
+import math
+from itertools import chain, ifilterfalse, imap
+from operator import attrgetter
 
 import mmh3
 from blist import sortedlist, sortedset
-import math
 
-from operator import attrgetter
-from itertools import (chain, ifilterfalse, imap)
+from .base_dve import BaseDVE
 
-MAX_32BIT_INT = 2**31 - 1
+MAX_32BIT_INT = 2 ** 31 - 1
+
 
 def unique_everseen(iterable, key=None):
     "List unique elements, preserving order. Remember all elements ever seen."
@@ -29,7 +30,7 @@ def unique_everseen(iterable, key=None):
     seen = set()
     seen_add = seen.add
     if key is None:
-        for element in ifilterfalse(seen.__contains__, iterable):
+        for element in filterfalse(seen.__contains__, iterable):
             seen_add(element)
             yield element
     else:
@@ -55,21 +56,21 @@ class KMinValues(BaseDVE):
     def add(self, key):
         idx = self._idx(key)
         if len(self.kmin) < self.k:
-            if idx not in self.kmin: # O(log^2(n))
-                self.kmin.add(idx) # O(log^2(n))
+            if idx not in self.kmin:  # O(log^2(n))
+                self.kmin.add(idx)  # O(log^2(n))
         else:
             if idx < self.kmin[-1]:
-                if idx not in self.kmin: # O(log^2(n))
-                    self.kmin.pop() # O(log(n))
-                    self.kmin.add(idx) # O(log^2(n))
+                if idx not in self.kmin:  # O(log^2(n))
+                    self.kmin.pop()  # O(log(n))
+                    self.kmin.add(idx)  # O(log^2(n))
 
     def _smallest_k(self, *others):
-        return min(self.k, *imap(attrgetter("k"), others))
+        return min(self.k, *map(attrgetter("k"), others))
 
     def _direct_sum(self, *others):
         n = 0
         k = self._smallest_k(*others)
-        X = sortedset(chain(self.kmin, *imap(attrgetter("kmin"), others)))[:k]
+        X = sortedset(chain(self.kmin, *map(attrgetter("kmin"), others)))[:k]
         for item in self.kmin:
             if item in X and all(item in L.kmin for L in others):
                 n += 1
@@ -77,7 +78,9 @@ class KMinValues(BaseDVE):
 
     def union(self, *others):
         newk = self._smallest_k(*others)
-        self.kmin = sortedlist(unique_everseen(chain(self.kmin, *imap(attrgetter("kmin"), others))))[:newk]
+        self.kmin = sortedlist(
+            unique_everseen(chain(self.kmin, *map(attrgetter("kmin"), others)))
+        )[:newk]
 
     def jaccard(self, other, k=0):
         n, X = self._direct_sum(other)
@@ -104,7 +107,7 @@ class KMinValues(BaseDVE):
     def __add__(self, other):
         assert other.k == self.k
         k = self._smallest_k(other)
-        nt = KMinValues(k = k)
+        nt = KMinValues(k=k)
         nt.kmin = self.kmin
         nt.union(other)
         return nt
@@ -113,14 +116,18 @@ class KMinValues(BaseDVE):
         p = 0
         if D:
             try:
-                from scipy import (special, optimize)
+                from scipy import special, optimize
             except ImportError:
                 raise Exception("Scipy needed for relative error bounds")
             k = self.k
 
-            u = lambda D, k, e : (k - 1.0) / ((1.0 - e) * D)
-            l = lambda D, k, e : (k - 1.0) / ((1.0 + e) * D)
-            objective = lambda e, D, k, confidence : special.betainc(k, D-k+1, u(D, k, e)) - special.betainc(k, D-k+1, l(D, k, e)) - confidence
+            u = lambda D, k, e: (k - 1.0) / ((1.0 - e) * D)
+            l = lambda D, k, e: (k - 1.0) / ((1.0 + e) * D)
+            objective = (
+                lambda e, D, k, confidence: special.betainc(k, D - k + 1, u(D, k, e))
+                - special.betainc(k, D - k + 1, l(D, k, e))
+                - confidence
+            )
 
             try:
                 p = optimize.newton(objective, x0=0.05, args=(D, k, confidence))

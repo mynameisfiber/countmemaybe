@@ -7,8 +7,10 @@ micha gorelick, mynameisfiber@gmail.com
 http://micha.gd/
 """
 
-import mmh3
 import numpy as np
+
+import mmh3
+
 
 class BloomFilter:
     def __init__(self, items=[], N=3, size=20, dtype=np.uint8):
@@ -48,7 +50,7 @@ class BloomFilter:
         if self.size != other.size or self.N != other.N or self.dtype != other.dtype:
             raise ValueError("Both blooms must have the same properties")
         newBloom = BloomFilter(N=self.N, size=self.size, dtype=self.dtype)
-        for i in xrange(self.size):
+        for i in range(self.size):
             newBloom.bloom[i] = self.bloom[i] | other.bloom[i]
         return newBloom
 

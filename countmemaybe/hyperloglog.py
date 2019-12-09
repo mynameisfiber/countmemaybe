@@ -11,20 +11,24 @@ http://micha.gd/
 [1]: http://algo.inria.fr/flajolet/Publications/FlFuGaMe07.pdf
 """
 
-import mmh3
 import math
-from base_dve import BaseDVE
+
+import mmh3
+
+from .base_dve import BaseDVE
+
 
 class InvalidParameters(Exception):
     pass
+
 
 class HyperLogLog(BaseDVE):
     def __init__(self, items=[], b=4, hasher=mmh3.hash):
         if not 4 <= b <= 16:
             raise InvalidParameters()
         self.b = b
-        self.m = 2**b
-        self.M = [0,] * self.m
+        self.m = 2 ** b
+        self.M = [0] * self.m
         self.hasher = hasher
         self._width = 31 - self.b
         if self.m >= 128:
@@ -47,7 +51,7 @@ class HyperLogLog(BaseDVE):
             mask >>= 1
             i += 1
         return i
-    
+
     def add(self, item):
         x = self._hash(item)
         j = x >> self._width
@@ -55,13 +59,13 @@ class HyperLogLog(BaseDVE):
         self.M[j] = max(self.M[j], self.rho(w, width=self._width))
 
     def _indicator(self, M):
-        return 1.0 / sum(2**-m for m in M)
+        return 1.0 / sum(2 ** -m for m in M)
 
     def union(self, other):
         assert self.m == other.m
         assert self.hasher == other.hasher
         assert self._width == other._width
-        for i in xrange(self.m):
+        for i in range(self.m):
             self.M[i] = max(self.M[i], other.M[i])
 
     def cardinality(self):
@@ -84,7 +88,7 @@ class HyperLogLog(BaseDVE):
         A = self.cardinality()
         B = other.cardinality()
         AuB = self.cardinality_union(other)
-        return (A + B)/AuB - 1
+        return (A + B) / AuB - 1
 
     def _card_helper(self, M, m, alpha):
         E = alpha * m * m * self._indicator(M)
@@ -95,12 +99,11 @@ class HyperLogLog(BaseDVE):
             else:
                 Estar = E
         else:
-            if E <= 2**32 / 30.0:
+            if E <= 2 ** 32 / 30.0:
                 Estar = E
             else:
-                Estar = -2**32 * math.log(1 - E / 2**32, 2)
+                Estar = -2 ** 32 * math.log(1 - E / 2 ** 32, 2)
         return Estar
-        
+
     def relative_error(self):
         return 1.04 / math.sqrt(self.m)
-
